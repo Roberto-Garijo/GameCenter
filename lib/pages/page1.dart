@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_center/pages/page_snake_game.dart';
 
 class Page1 extends StatelessWidget {
   const Page1({Key? key}) : super(key: key);
@@ -12,7 +13,19 @@ class Page1 extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
-            color: Colors.blue,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(
+                    "https://c.tenor.com/WuaZ4G33BBoAAAAC/flappy-bird-flying.gif"),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PageSnakeGame()));
+              },
+            ),
           ),
         ),
       ),
