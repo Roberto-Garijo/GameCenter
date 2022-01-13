@@ -8,19 +8,18 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 // ignore: use_key_in_widget_constructors
 class HomePage extends StatelessWidget {
   final _controller = PageController();
-
+  Image appLogo = const Image(image: NetworkImage("https://s3.amazonaws.com/black-rocket-arcade-assets/wordpress/wp-content/uploads/2019/04/22214756/800-logo.gif"));
+  
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/Rocket.jpg"),
-        fit: BoxFit.cover,
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: appLogo,
+        backgroundColor: Colors.black,
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Column(
+      body: Container(
+        color: Colors.black,
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             //page view
@@ -36,20 +35,17 @@ class HomePage extends StatelessWidget {
               ),
             ),
 
-            //dot
+            //dots
             SmoothPageIndicator(
               controller: _controller, 
               count: 3,
-              effect: JumpingDotEffect(
-                activeDotColor: Colors.blueAccent,
-                dotColor: Colors.blue.shade100,
+              effect: WormEffect(
+                activeDotColor: Colors.white,
+                dotColor: Colors.white24,
                 dotHeight: 23,
                 dotWidth: 23,
                 spacing: 16,
-                verticalOffset: 20
               ),
-              onDotClicked:(index) {
-              } ,
             ),
           ],
         ),
