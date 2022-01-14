@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_center/pages/flappy_page.dart';
 import 'package:game_center/pages/page_snake_game.dart';
 
 class Page1 extends StatelessWidget {
@@ -23,7 +24,7 @@ class Page1 extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PageSnakeGame()));
+                    MaterialPageRoute(builder: (context) => FlappyBirdPage()));
               },
             ),
           ),
