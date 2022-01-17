@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:game_center/pages/game.dart';
-import 'package:game_center/pages/page_snake_game.dart';
-import 'package:game_center/pages/tetris_page.dart';
+import 'package:game_center/pages/snake_pages/page_snake_game.dart';
 
-class Page3 extends StatelessWidget {
-  const Page3({Key? key}) : super(key: key);
+class SnakeHomePage extends StatelessWidget {
+  const SnakeHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +16,14 @@ class Page3 extends StatelessWidget {
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
-                    "https://cdn.dribbble.com/users/2475489/screenshots/9239848/media/ff48675e4dd24c950af1dda5ac3c6019.gif"),
+                    "https://justhanblog.files.wordpress.com/2017/07/snake.gif?w=730"),
                 fit: BoxFit.cover,
               ),
             ),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyGame()));
+                    MaterialPageRoute(builder: (context) => PageSnakeGame()));
               },
             ),
           ),

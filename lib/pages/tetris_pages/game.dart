@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'button.dart';
-import 'gird.dart';
+import 'grid.dart';
 import 'package:flutter/services.dart';
 
 class MyGame extends StatefulWidget {
