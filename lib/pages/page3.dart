@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_center/pages/page_snake_game.dart';
+import 'package:game_center/pages/tetris_page.dart';
 
 class Page3 extends StatelessWidget {
   const Page3({Key? key}) : super(key: key);
@@ -23,7 +24,7 @@ class Page3 extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PageSnakeGame()));
+                    MaterialPageRoute(builder: (context) => TetrisPage()));
               },
             ),
           ),
