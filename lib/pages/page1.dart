@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_center/pages/flappy_page.dart';
+import 'package:game_center/pages/flappy_bird_pages/flappy_page.dart';
 import 'package:game_center/pages/page_snake_game.dart';
 
 class Page1 extends StatelessWidget {
