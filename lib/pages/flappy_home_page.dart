@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:game_center/pages/flappy_bird_pages/flappy_page.dart';
-import 'package:game_center/pages/page_snake_game.dart';
+import 'package:game_center/pages/snake_pages/page_snake_game.dart';
 
-class Page1 extends StatelessWidget {
-  const Page1({Key? key}) : super(key: key);
+class FlappyHomePage extends StatelessWidget {
+  const FlappyHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

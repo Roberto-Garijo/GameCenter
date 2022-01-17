@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:game_center/pages/page1.dart';
-import 'package:game_center/pages/page2.dart';
-import 'package:game_center/pages/page3.dart';
+import 'package:game_center/pages/flappy_home_page.dart';
+import 'package:game_center/pages/snake_home_page.dart';
+import 'package:game_center/pages/tetris_home_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 
@@ -28,9 +28,9 @@ class HomePage extends StatelessWidget {
               child: PageView(
                 controller: _controller,
                 children: const [
-                    Page1(),
-                    Page2(),
-                    Page3()
+                    FlappyHomePage(),
+                    SnakeHomePage(),
+                    TetrisHomePage()
                 ],
               ),
             ),

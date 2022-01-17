@@ -11,7 +11,7 @@ class PageSnakeGame extends StatefulWidget {
 
 class _HomePageSnakeGame extends State<PageSnakeGame> {
   static List<int> snakePosition = [45, 65, 85, 105, 125];
-  static int numberOfSquares = 760;
+  static int numberOfSquares = 540;
   int numberInRow = 20;
   bool gameHasStarted = false;
 
@@ -23,7 +23,7 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: AppBar(),
+      appBar: AppBar(),
       backgroundColor: Colors.black,
       body: Center(
         child: Container(

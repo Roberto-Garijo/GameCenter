@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_center/pages/pixel.dart';
+import 'package:game_center/pages/tetris_pages/pixel.dart';
 
 // ignore: must_be_immutable
 class MyGrid extends StatelessWidget {
