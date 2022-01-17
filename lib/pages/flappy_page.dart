@@ -199,23 +199,16 @@ class _FlappyBirdPage extends State<FlappyBirdPage> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          
                           SizedBox(
                             height: 15,
                           ),
-                          
                         ],
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          
                           SizedBox(
                             height: 15,
-                          ),
-                          Text(
-                            'B E S T',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                         ],
                       ),
