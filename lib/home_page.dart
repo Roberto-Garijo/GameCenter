@@ -5,7 +5,7 @@ import 'package:game_center/pages/page3.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 
-// ignore: use_key_in_widget_constructors
+// ignore: use_key_in_widget_constructors, must_be_immutable
 class HomePage extends StatelessWidget {
   final _controller = PageController();
   Image appLogo = const Image(image: NetworkImage("https://s3.amazonaws.com/black-rocket-arcade-assets/wordpress/wp-content/uploads/2019/04/22214756/800-logo.gif"));
