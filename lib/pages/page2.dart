@@ -16,7 +16,7 @@ class Page2 extends StatelessWidget {
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
-                    "https://images-na.ssl-images-amazon.com/images/I/417g1+p4mDL.png"),
+                    "https://justhanblog.files.wordpress.com/2017/07/snake.gif?w=730"),
                 fit: BoxFit.cover,
               ),
             ),
