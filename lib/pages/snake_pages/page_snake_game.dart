@@ -1,19 +1,22 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, deprecated_member_use
 import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class PageSnakeGame extends StatefulWidget {
+class SnakeGame extends StatefulWidget {
   @override
-  _HomePageSnakeGame createState() => _HomePageSnakeGame();
+  _SnakeGameState createState() => _SnakeGameState();
 }
 
-class _HomePageSnakeGame extends State<PageSnakeGame> {
+class _SnakeGameState extends State<SnakeGame> {
   static List<int> snakePosition = [45, 65, 85, 105, 125];
+  var score = 0;
   static int numberOfSquares = 540;
   int numberInRow = 20;
   bool gameHasStarted = false;
+  bool gameIsExecuting = false;
+  int snakeSpeed = 400;
 
   static var randomNumber = Random();
   int food = randomNumber.nextInt(numberOfSquares - 1);
@@ -23,7 +26,8 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Score: $score, Speed: $snakeSpeed')),
       backgroundColor: Colors.black,
       body: Center(
         child: Container(
@@ -98,14 +102,22 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
                         }
                       },
                       child: Text(
-                        's t a r t',
+                        'S T A R T',
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
-                    Text(
-                      's t o p',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    )
+                    GestureDetector(
+                        onTap: stopGame,
+                        child: Text(
+                          'S T O P',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        )),
+                    GestureDetector(
+                        onTap: resumeGame,
+                        child: Text(
+                          'R E S U M E',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ))
                   ],
                 ),
               )
@@ -121,9 +133,18 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
   }
 
   void startGame() {
+    direction = 'down';
     gameHasStarted = true;
+    gameIsExecuting = true;
     snakePosition = [45, 65, 85, 105, 125];
-    const duration = const Duration(milliseconds: 400);
+
+    if (score % 5 == 0) {
+      setState(() {
+        snakeSpeed += 200;
+      });
+    }
+
+    var duration = Duration(milliseconds: snakeSpeed);
     Timer.periodic(duration, (Timer timer) {
       updateSnake();
       if (gameOver()) {
@@ -133,54 +154,75 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
     });
   }
 
-  void updateSnake() {
+  void stopGame() {
+    gameIsExecuting = false;
+  }
+
+  void resumeGame() {
+    gameIsExecuting = true;
+  }
+
+  void playAgain() {
     setState(() {
-      switch (direction) {
-        case 'down':
-          if (snakePosition.last > numberOfSquares - numberInRow) {
-            snakePosition
-                .add(snakePosition.last + numberInRow - numberOfSquares);
-          } else {
-            snakePosition.add(snakePosition.last + numberInRow);
-          }
-
-          break;
-
-        case 'up':
-          if (snakePosition.last < numberInRow) {
-            snakePosition
-                .add(snakePosition.last - numberInRow + numberOfSquares);
-          } else {
-            snakePosition.add(snakePosition.last - numberInRow);
-          }
-          break;
-
-        case 'left':
-          if (snakePosition.last % numberInRow == 0) {
-            snakePosition.add(snakePosition.last - 1 + numberInRow);
-          } else {
-            snakePosition.add(snakePosition.last - 1);
-          }
-
-          break;
-
-        case 'right':
-          if ((snakePosition.last + 1) % numberInRow == 0) {
-            snakePosition.add(snakePosition.last + 1 - numberInRow);
-          } else {
-            snakePosition.add(snakePosition.last + 1);
-          }
-          break;
-
-        default:
-      }
-
-      if (snakePosition.last == food) {
-        generateNewFood();
-      } else {
-        snakePosition.removeAt(0);
-      }
+      snakePosition = [45, 65, 85, 105, 125];
+      snakeSpeed = 400;
     });
+    startGame();
+  }
+
+  void updateSnake() {
+    if (gameIsExecuting) {
+      setState(() {
+        switch (direction) {
+          case 'down':
+            if (snakePosition.last > numberOfSquares - numberInRow) {
+              snakePosition
+                  .add(snakePosition.last + numberInRow - numberOfSquares);
+            } else {
+              snakePosition.add(snakePosition.last + numberInRow);
+            }
+
+            break;
+
+          case 'up':
+            if (snakePosition.last < numberInRow) {
+              snakePosition
+                  .add(snakePosition.last - numberInRow + numberOfSquares);
+            } else {
+              snakePosition.add(snakePosition.last - numberInRow);
+            }
+            break;
+
+          case 'left':
+            if (snakePosition.last % numberInRow == 0) {
+              snakePosition.add(snakePosition.last - 1 + numberInRow);
+            } else {
+              snakePosition.add(snakePosition.last - 1);
+            }
+
+            break;
+
+          case 'right':
+            if ((snakePosition.last + 1) % numberInRow == 0) {
+              snakePosition.add(snakePosition.last + 1 - numberInRow);
+            } else {
+              snakePosition.add(snakePosition.last + 1);
+            }
+            break;
+
+          default:
+        }
+
+        if (snakePosition.last == food) {
+          setState(() {
+            score++;
+          });
+          generateNewFood();
+        } else {
+          snakePosition.removeAt(0);
+        }
+      });
+    }
   }
 
   bool gameOver() {
@@ -204,12 +246,12 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('GAME OVER'),
-            content: Text('You\'re score: ' + snakePosition.length.toString()),
+            content: Text('Your score: ' + snakePosition.length.toString()),
             actions: <Widget>[
               FlatButton(
                 child: Text('Play Again'),
                 onPressed: () {
-                  startGame();
+                  playAgain();
                   Navigator.of(context).pop();
                 },
               )
