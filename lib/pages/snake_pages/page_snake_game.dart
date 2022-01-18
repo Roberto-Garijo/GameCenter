@@ -14,7 +14,7 @@ class _SnakeGameState extends State<SnakeGame> {
   var score = 0;
   static int numberOfSquares = 540;
   int numberInRow = 20;
-  bool gameHasStarted = false;
+  //bool gameHasStarted = false;
   bool gameIsExecuting = false;
   int snakeSpeed = 400;
 
@@ -26,12 +26,12 @@ class _SnakeGameState extends State<SnakeGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Score: $score, Speed: $snakeSpeed')),
+      appBar: AppBar(title: Text('Score: $score | Snake Speed: $snakeSpeed')),
       backgroundColor: Colors.black,
       body: Center(
         child: Container(
           width: 400,
+          height: 700,
           child: Column(
             children: <Widget>[
               Expanded(
@@ -96,11 +96,7 @@ class _SnakeGameState extends State<SnakeGame> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () {
-                        if (gameHasStarted == false) {
-                          startGame();
-                        }
-                      },
+                      onTap: startGame,
                       child: Text(
                         'S T A R T',
                         style: TextStyle(color: Colors.white, fontSize: 20),
@@ -134,19 +130,31 @@ class _SnakeGameState extends State<SnakeGame> {
 
   void startGame() {
     direction = 'down';
-    gameHasStarted = true;
+    //gameHasStarted = true;
     gameIsExecuting = true;
     snakePosition = [45, 65, 85, 105, 125];
 
-    if (score % 5 == 0) {
+    if (score == 1) {
       setState(() {
-        snakeSpeed += 200;
+        snakeSpeed -= 50;
+      });
+    }
+    if (score == 2) {
+      setState(() {
+        snakeSpeed -= 50;
+      });
+    }
+    if (score == 3) {
+      setState(() {
+        snakeSpeed -= 50;
       });
     }
 
     var duration = Duration(milliseconds: snakeSpeed);
     Timer.periodic(duration, (Timer timer) {
-      updateSnake();
+      if (gameIsExecuting) {
+        updateSnake();
+      }
       if (gameOver()) {
         timer.cancel();
         _showGameOverScreen();
@@ -166,63 +174,61 @@ class _SnakeGameState extends State<SnakeGame> {
     setState(() {
       snakePosition = [45, 65, 85, 105, 125];
       snakeSpeed = 400;
+      score = 0;
     });
-    startGame();
+    //startGame();
   }
 
   void updateSnake() {
-    if (gameIsExecuting) {
-      setState(() {
-        switch (direction) {
-          case 'down':
-            if (snakePosition.last > numberOfSquares - numberInRow) {
-              snakePosition
-                  .add(snakePosition.last + numberInRow - numberOfSquares);
-            } else {
-              snakePosition.add(snakePosition.last + numberInRow);
-            }
+    setState(() {
+      switch (direction) {
+        case 'down':
+          if (snakePosition.last > numberOfSquares - numberInRow) {
+            snakePosition
+                .add(snakePosition.last + numberInRow - numberOfSquares);
+          } else {
+            snakePosition.add(snakePosition.last + numberInRow);
+          }
+          break;
 
-            break;
+        case 'up':
+          if (snakePosition.last < numberInRow) {
+            snakePosition
+                .add(snakePosition.last - numberInRow + numberOfSquares);
+          } else {
+            snakePosition.add(snakePosition.last - numberInRow);
+          }
+          break;
 
-          case 'up':
-            if (snakePosition.last < numberInRow) {
-              snakePosition
-                  .add(snakePosition.last - numberInRow + numberOfSquares);
-            } else {
-              snakePosition.add(snakePosition.last - numberInRow);
-            }
-            break;
+        case 'left':
+          if (snakePosition.last % numberInRow == 0) {
+            snakePosition.add(snakePosition.last - 1 + numberInRow);
+          } else {
+            snakePosition.add(snakePosition.last - 1);
+          }
 
-          case 'left':
-            if (snakePosition.last % numberInRow == 0) {
-              snakePosition.add(snakePosition.last - 1 + numberInRow);
-            } else {
-              snakePosition.add(snakePosition.last - 1);
-            }
+          break;
 
-            break;
+        case 'right':
+          if ((snakePosition.last + 1) % numberInRow == 0) {
+            snakePosition.add(snakePosition.last + 1 - numberInRow);
+          } else {
+            snakePosition.add(snakePosition.last + 1);
+          }
+          break;
 
-          case 'right':
-            if ((snakePosition.last + 1) % numberInRow == 0) {
-              snakePosition.add(snakePosition.last + 1 - numberInRow);
-            } else {
-              snakePosition.add(snakePosition.last + 1);
-            }
-            break;
+        default:
+      }
 
-          default:
-        }
-
-        if (snakePosition.last == food) {
-          setState(() {
-            score++;
-          });
-          generateNewFood();
-        } else {
-          snakePosition.removeAt(0);
-        }
-      });
-    }
+      if (snakePosition.last == food) {
+        setState(() {
+          score++;
+        });
+        generateNewFood();
+      } else {
+        snakePosition.removeAt(0);
+      }
+    });
   }
 
   bool gameOver() {
@@ -246,10 +252,10 @@ class _SnakeGameState extends State<SnakeGame> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('GAME OVER'),
-            content: Text('Your score: ' + snakePosition.length.toString()),
+            content: Text('Your score: $score'),
             actions: <Widget>[
               FlatButton(
-                child: Text('Play Again'),
+                child: Text('Reset game'),
                 onPressed: () {
                   playAgain();
                   Navigator.of(context).pop();
