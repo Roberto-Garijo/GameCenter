@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'button.dart';
 import 'grid.dart';
@@ -42,6 +43,7 @@ class _MyGameState extends State<MyGame> {
     [], // pink
   ];
 
+  final player = AudioCache();
   static int numberOfSquares = 150;
   static int number = 0;
   double count = 0;
@@ -570,7 +572,7 @@ class _MyGameState extends State<MyGame> {
   }
 
   int identifyPiece() {
-    int pieceNumber = 0;
+    int pieceNumber = -1;
 
     chosenPiece.sort();
 
@@ -737,7 +739,10 @@ class _MyGameState extends State<MyGame> {
                   children: <Widget>[
                     Expanded(
                         child: GestureDetector(
-                      onTap: startGame,
+                      onTap:() {
+                      startGame;
+                      player.play('tetris.mp3');
+                      },
                       child: MyButton(
                         child: Text(
                           "PLAY",
