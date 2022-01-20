@@ -191,7 +191,7 @@ class _SnakeGameState extends State<SnakeGame> {
   void playAgain() {
     setState(() {
       snakePosition = [45, 65, 85, 105, 125];
-      snakeSpeed = 400;
+      //snakeSpeed = 400;
       score = 0;
     });
   }
@@ -274,9 +274,9 @@ class _SnakeGameState extends State<SnakeGame> {
               FlatButton(
                 child: Text('Reset game'),
                 onPressed: () {
+                  Navigator.of(context).pop();
                   playAgain();
                   generateNewFood();
-                  Navigator.of(context).pop();
                 },
               )
             ],
