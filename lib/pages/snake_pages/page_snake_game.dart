@@ -1,33 +1,46 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, deprecated_member_use
 import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class PageSnakeGame extends StatefulWidget {
+class SnakeGame extends StatefulWidget {
   @override
-  _HomePageSnakeGame createState() => _HomePageSnakeGame();
+  _SnakeGameState createState() => _SnakeGameState();
 }
 
-class _HomePageSnakeGame extends State<PageSnakeGame> {
+class _SnakeGameState extends State<SnakeGame> {
   static List<int> snakePosition = [45, 65, 85, 105, 125];
-  static int numberOfSquares = 540;
-  int numberInRow = 20;
-  bool gameHasStarted = false;
-
   static var randomNumber = Random();
-  int food = randomNumber.nextInt(numberOfSquares - 1);
-
+  static int numberOfSquares = 540;
   var direction = 'down';
+  int score = 0;
+  int numberInRow = 20;
+  bool gameIsExecuting = false;
+  int snakeSpeed = 400;
+  int food = randomNumber.nextInt(numberOfSquares - 1);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Container(
+          padding: EdgeInsets.all(60),
+          child: Text('S C O R E  :  $score',
+              style: TextStyle(
+                fontFamily: 'Console',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )),
+        ),
+        backgroundColor: Colors.grey,
+      ),
       backgroundColor: Colors.black,
       body: Center(
         child: Container(
           width: 400,
+          height: 600,
           child: Column(
             children: <Widget>[
               Expanded(
@@ -71,7 +84,7 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
                               padding: EdgeInsets.all(2),
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(5),
-                                  child: Container(color: Colors.green)),
+                                  child: Container(color: Colors.red)),
                             );
                           } else {
                             return Container(
@@ -92,20 +105,33 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () {
-                        if (gameHasStarted == false) {
-                          startGame();
-                        }
-                      },
+                      onTap: startGame,
                       child: Text(
-                        's t a r t',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        'S T A R T',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Text(
-                      's t o p',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    )
+                    GestureDetector(
+                        onTap: stopGame,
+                        child: Text(
+                          'S T O P',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        )),
+                    GestureDetector(
+                        onTap: resumeGame,
+                        child: Text(
+                          'R E S U M E',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ))
                   ],
                 ),
               )
@@ -116,20 +142,56 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
     );
   }
 
+  bool _enabled = true;
+
+  void _disableStart() {
+    setState(() {
+      _enabled = false;
+    });
+
+    Timer(Duration(seconds: 1), () => setState(() => _enabled = true));
+
+    if (gameOver()) {
+      setState(() {
+        _enabled = true;
+      });
+    }
+  }
+
   void generateNewFood() {
     food = randomNumber.nextInt(numberOfSquares - 1);
   }
 
   void startGame() {
-    gameHasStarted = true;
+    direction = 'down';
+    gameIsExecuting = true;
     snakePosition = [45, 65, 85, 105, 125];
-    const duration = const Duration(milliseconds: 400);
+
+    var duration = Duration(milliseconds: snakeSpeed);
     Timer.periodic(duration, (Timer timer) {
-      updateSnake();
+      if (gameIsExecuting) {
+        updateSnake();
+      }
       if (gameOver()) {
         timer.cancel();
         _showGameOverScreen();
       }
+    });
+  }
+
+  void stopGame() {
+    gameIsExecuting = false;
+  }
+
+  void resumeGame() {
+    gameIsExecuting = true;
+  }
+
+  void playAgain() {
+    setState(() {
+      snakePosition = [45, 65, 85, 105, 125];
+      snakeSpeed = 400;
+      score = 0;
     });
   }
 
@@ -143,7 +205,6 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
           } else {
             snakePosition.add(snakePosition.last + numberInRow);
           }
-
           break;
 
         case 'up':
@@ -176,6 +237,9 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
       }
 
       if (snakePosition.last == food) {
+        setState(() {
+          score++;
+        });
         generateNewFood();
       } else {
         snakePosition.removeAt(0);
@@ -204,12 +268,13 @@ class _HomePageSnakeGame extends State<PageSnakeGame> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('GAME OVER'),
-            content: Text('You\'re score: ' + snakePosition.length.toString()),
+            content: Text('Your score: $score'),
             actions: <Widget>[
               FlatButton(
-                child: Text('Play Again'),
+                child: Text('Reset game'),
                 onPressed: () {
-                  startGame();
+                  playAgain();
+                  generateNewFood();
                   Navigator.of(context).pop();
                 },
               )
