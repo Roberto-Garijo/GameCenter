@@ -747,9 +747,7 @@ class _MyGameState extends State<MyGame> {
                   children: <Widget>[
                     Expanded(
                         child: GestureDetector(
-                      onTap:() {
-                      startGame;
-                      },
+                      onTap: startGame,
                       child: MyButton(
                         child: Text(
                           "PLAY",

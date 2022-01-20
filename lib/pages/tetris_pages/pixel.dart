@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 class MyPixel extends StatelessWidget {
 
   final color;
-  final child;
 
-  MyPixel({this.color, this.child});
+  MyPixel({this.color});
   
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,6 @@ class MyPixel extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
         child: Container(
           color: color,
-          child: child,
         ),
       ),
     );
