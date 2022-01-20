@@ -16,8 +16,8 @@ class FlappyHomePage extends StatelessWidget {
           child: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(
-                    "https://c.tenor.com/WuaZ4G33BBoAAAAC/flappy-bird-flying.gif"),
+                image: AssetImage(
+                    "assets/flappy-bird-flying.gif"),
                 fit: BoxFit.cover,
               ),
             ),
