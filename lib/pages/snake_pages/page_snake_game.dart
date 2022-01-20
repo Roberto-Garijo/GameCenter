@@ -17,11 +17,25 @@ class _SnakeGameState extends State<SnakeGame> {
   int score = 0;
   int numberInRow = 20;
   bool gameIsExecuting = false;
-  int snakeSpeed = 400;
+  int snakeSpeed = 200;
   int food = randomNumber.nextInt(numberOfSquares - 1);
+  bool _enabled = true;
 
   @override
   Widget build(BuildContext context) {
+
+    var _onPressed;
+    if(_enabled == true) {
+      _onPressed = () {
+        startGame();
+        _enabled = false;
+      };
+
+      if(_enabled == false) {
+        _onPressed = false;
+      }
+    }
+    
     return Scaffold(
       appBar: AppBar(
         title: Container(
@@ -83,7 +97,7 @@ class _SnakeGameState extends State<SnakeGame> {
                             return Container(
                               padding: EdgeInsets.all(2),
                               child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(7),
+                                  borderRadius: BorderRadius.circular(10),
                                   child: Container(color: Colors.red)),
                             );
                           } else {
@@ -105,7 +119,7 @@ class _SnakeGameState extends State<SnakeGame> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     GestureDetector(
-                      onTap:startGame,
+                      onTap: _onPressed,
                       child: Text(
                         'S T A R T',
                         style: TextStyle(
@@ -142,22 +156,6 @@ class _SnakeGameState extends State<SnakeGame> {
     );
   }
 
-  bool active = false;
-/*
-  bool enabled = true;
-
-  void disableStart() {
-    setState(() {
-      enabled = false;
-    });
-
-    if (gameOver()) {
-      setState(() {
-        enabled = true;
-      });
-    }
-  }
-*/
   void generateNewFood() {
     if (snakePosition != food)
     food = randomNumber.nextInt(numberOfSquares - 1);
