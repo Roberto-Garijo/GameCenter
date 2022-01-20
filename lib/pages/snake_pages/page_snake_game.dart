@@ -25,7 +25,7 @@ class _SnakeGameState extends State<SnakeGame> {
     return Scaffold(
       appBar: AppBar(
         title: Container(
-          padding: EdgeInsets.all(60),
+          padding: EdgeInsets.all(67),
           child: Text('S C O R E  :  $score',
               style: TextStyle(
                 fontFamily: 'Console',
@@ -73,7 +73,7 @@ class _SnakeGameState extends State<SnakeGame> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(5),
                                   child: Container(
-                                    color: Colors.white,
+                                    color: Colors.lightGreen,
                                   ),
                                 ),
                               ),
@@ -83,7 +83,7 @@ class _SnakeGameState extends State<SnakeGame> {
                             return Container(
                               padding: EdgeInsets.all(2),
                               child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
+                                  borderRadius: BorderRadius.circular(7),
                                   child: Container(color: Colors.red)),
                             );
                           } else {
@@ -105,7 +105,7 @@ class _SnakeGameState extends State<SnakeGame> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: startGame,
+                      onTap:startGame,
                       child: Text(
                         'S T A R T',
                         style: TextStyle(
@@ -142,23 +142,24 @@ class _SnakeGameState extends State<SnakeGame> {
     );
   }
 
-  bool _enabled = true;
+  bool active = false;
+/*
+  bool enabled = true;
 
-  void _disableStart() {
+  void disableStart() {
     setState(() {
-      _enabled = false;
+      enabled = false;
     });
-
-    Timer(Duration(seconds: 1), () => setState(() => _enabled = true));
 
     if (gameOver()) {
       setState(() {
-        _enabled = true;
+        enabled = true;
       });
     }
   }
-
+*/
   void generateNewFood() {
+    if (snakePosition != food)
     food = randomNumber.nextInt(numberOfSquares - 1);
   }
 
