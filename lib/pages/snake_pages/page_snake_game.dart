@@ -11,27 +11,36 @@ class SnakeGame extends StatefulWidget {
 
 class _SnakeGameState extends State<SnakeGame> {
   static List<int> snakePosition = [45, 65, 85, 105, 125];
-  var score = 0;
+  static var randomNumber = Random();
   static int numberOfSquares = 540;
+  var direction = 'down';
+  int score = 0;
   int numberInRow = 20;
-  //bool gameHasStarted = false;
   bool gameIsExecuting = false;
   int snakeSpeed = 400;
-
-  static var randomNumber = Random();
   int food = randomNumber.nextInt(numberOfSquares - 1);
-
-  var direction = 'down';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Score: $score | Snake Speed: $snakeSpeed')),
+      appBar: AppBar(
+        title: Container(
+          padding: EdgeInsets.all(60),
+          child: Text('S C O R E  :  $score',
+              style: TextStyle(
+                fontFamily: 'Console',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )),
+        ),
+        backgroundColor: Colors.grey,
+      ),
       backgroundColor: Colors.black,
       body: Center(
         child: Container(
           width: 400,
-          height: 700,
+          height: 600,
           child: Column(
             children: <Widget>[
               Expanded(
@@ -75,7 +84,7 @@ class _SnakeGameState extends State<SnakeGame> {
                               padding: EdgeInsets.all(2),
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(5),
-                                  child: Container(color: Colors.green)),
+                                  child: Container(color: Colors.red)),
                             );
                           } else {
                             return Container(
@@ -99,20 +108,29 @@ class _SnakeGameState extends State<SnakeGame> {
                       onTap: startGame,
                       child: Text(
                         'S T A R T',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                     GestureDetector(
                         onTap: stopGame,
                         child: Text(
                           'S T O P',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         )),
                     GestureDetector(
                         onTap: resumeGame,
                         child: Text(
                           'R E S U M E',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         ))
                   ],
                 ),
@@ -124,31 +142,30 @@ class _SnakeGameState extends State<SnakeGame> {
     );
   }
 
+  bool _enabled = true;
+
+  void _disableStart() {
+    setState(() {
+      _enabled = false;
+    });
+
+    Timer(Duration(seconds: 1), () => setState(() => _enabled = true));
+
+    if (gameOver()) {
+      setState(() {
+        _enabled = true;
+      });
+    }
+  }
+
   void generateNewFood() {
     food = randomNumber.nextInt(numberOfSquares - 1);
   }
 
   void startGame() {
     direction = 'down';
-    //gameHasStarted = true;
     gameIsExecuting = true;
     snakePosition = [45, 65, 85, 105, 125];
-
-    if (score == 1) {
-      setState(() {
-        snakeSpeed -= 50;
-      });
-    }
-    if (score == 2) {
-      setState(() {
-        snakeSpeed -= 50;
-      });
-    }
-    if (score == 3) {
-      setState(() {
-        snakeSpeed -= 50;
-      });
-    }
 
     var duration = Duration(milliseconds: snakeSpeed);
     Timer.periodic(duration, (Timer timer) {
@@ -176,7 +193,6 @@ class _SnakeGameState extends State<SnakeGame> {
       snakeSpeed = 400;
       score = 0;
     });
-    //startGame();
   }
 
   void updateSnake() {
@@ -258,6 +274,7 @@ class _SnakeGameState extends State<SnakeGame> {
                 child: Text('Reset game'),
                 onPressed: () {
                   playAgain();
+                  generateNewFood();
                   Navigator.of(context).pop();
                 },
               )
