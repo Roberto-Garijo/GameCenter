@@ -47,6 +47,10 @@ class MyGrid extends StatelessWidget {
       } else {
         return MyPixel(
           color: Colors.black,
+          child: Text(
+            index.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
         );
       }
     });
