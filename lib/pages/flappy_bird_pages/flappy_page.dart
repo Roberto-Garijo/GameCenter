@@ -18,11 +18,14 @@ class _FlappyBirdPage extends State<FlappyBirdPage> {
   double height = 0;
   double time = 0;
   double gravity = -4.9;
-  double velocity = 3.5;
+  double velocity = 3;
   double birdWidth = 0.1;
   double birdHeight = 0.1;
 
   bool gameHasStarted = false;
+
+  int score = 0;
+  int highScore = 0;
 
   static List<double> barrierX = [2, 2 + 1.5];
   static double barrierWidth = 0.5;
@@ -56,13 +59,29 @@ class _FlappyBirdPage extends State<FlappyBirdPage> {
 
       if (barrierX[i] < -1.5) {
         barrierX[i] += 3;
+        setState(() {
+          score++;
+        });
+      }
+
+      if(barrierX[i] == -1) {
+        setState(() {
+          score++;
+        });
       }
     }
   }
 
   void resetGame() {
     Navigator.pop(context);
+    if(score >= highScore) {
+        setState(() {
+          highScore = score;
+        });
+      }
+      
     setState(() {
+      score = 0;
       birdY = 0;
       gameHasStarted = false;
       time = 0;
@@ -203,16 +222,32 @@ class _FlappyBirdPage extends State<FlappyBirdPage> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Text(
+                            '$score',
+                            style: TextStyle(color: Colors.white, fontSize: 35),
+                          ),
                           SizedBox(
                             height: 15,
+                          ),
+                          Text(
+                            'S C O R E',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                         ],
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Text(
+                            '$highScore',
+                            style: TextStyle(color: Colors.white, fontSize: 35),
+                          ),
                           SizedBox(
                             height: 15,
+                          ),
+                          Text(
+                            'B E S T',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                         ],
                       ),

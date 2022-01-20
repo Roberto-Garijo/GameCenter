@@ -15,8 +15,8 @@ class SnakeHomePage extends StatelessWidget {
           child: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(
-                    "https://justhanblog.files.wordpress.com/2017/07/snake.gif?w=730"),
+                image: AssetImage(
+                    "assets/snake.gif"),
                 fit: BoxFit.cover,
               ),
             ),
