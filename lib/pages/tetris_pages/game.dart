@@ -43,9 +43,11 @@ class _MyGameState extends State<MyGame> {
     [], // pink
   ];
 
+  bool gameIsExecuting = false;
   static int numberOfSquares = 150;
   static int number = 0;
   double count = 0;
+  int score = 0;
 
   void countLanded() {
     count = landed.length / 4;
@@ -53,30 +55,33 @@ class _MyGameState extends State<MyGame> {
   }
 
   void startGame() {
-    resetPieces();
+    gameIsExecuting = true;
     choosePiece();
-    const duration = Duration(milliseconds: 300);
-    Timer.periodic(
-      duration,
-      (Timer timer) {
-        clearRow();
+    Timer.periodic(Duration(milliseconds: 300), (timer) {
+      resetPieces();
+      clearRow();
+      if (gameIsExecuting) {
         if (hitFloor()) {
           for (int i = 0; i < chosenPiece.length; i++) {
             landed.add(chosenPiece[i]);
             landedPosColor[number % pieces.length].add(chosenPiece[i]);
           }
           number++;
-          startGame();
-          timer.cancel();
+          setState(() {
+            startGame();
+            timer.cancel();
+          });
         } else {
           moveDown();
         }
-      //   if (isGameOver()) {
-      //       _gameOverScreen(30);
-      //       timer.cancel();
-      //   } 
-      },
-    );
+      }
+      if (isGameOver()) {
+        timer.cancel();
+        _gameOverScreen(score);
+        enable = false;
+        gameIsExecuting = false;
+      }
+    });
   }
 
   void resetPieces() {
@@ -93,13 +98,20 @@ class _MyGameState extends State<MyGame> {
     });
   }
 
-  // bool isGameOver() {
-  //   if(landed.length != numberOfSquares + chosenPiece.length) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
+  bool isGameOver() {
+    for (int i = 0; i < landed.length; i++) {
+      int count = 0;
+      for (int j = 0; j < landed.length; j++) {
+        if (landed[i] == landed[j]) {
+          count += 1;
+        }
+        if (count == 2) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   void clearRow() {
     int count;
@@ -125,6 +137,48 @@ class _MyGameState extends State<MyGame> {
             for (int i = 0; i < landed.length; i++) {
               if (landed[i] < removeRow.first) {
                 landed[i] += 10;
+                score++;
+              }
+            }
+
+            for (int q = 0; q < landedPosColor.length; q++) {
+              for (int r = 0; r < landedPosColor[q].length; r++) {
+                if (landedPosColor[q][r] < removeRow.first) {
+                  landedPosColor[q][r] += 10;
+                  score++;
+                }
+              }
+            }
+          });
+        }
+      }
+    }
+  }
+
+  void cleraAllRoows() {
+    int count;
+    List<int> removeRow = [];
+
+    for (int i = 0; i < 15; i++) {
+      // 15 is the number of rows
+      removeRow.clear();
+      count = 0;
+      for (int j = 0; j < 10; j++) {
+        if (landed.contains(numberOfSquares - 1 - i * 10 - j)) {
+          removeRow.add(150 - i * 10 - j);
+          count++;
+        }
+
+        if (count == 1) {
+          setState(() {
+            removeRow.forEach((element) => landed.remove(element));
+            for (int q = 0; q < pieces.length; q++) {
+              removeRow.forEach((element) => landedPosColor[q].remove(element));
+            }
+
+            for (int i = 0; i < landed.length; i++) {
+              if (landed[i] < removeRow.first) {
+                landed[i] += 10;
               }
             }
 
@@ -141,10 +195,13 @@ class _MyGameState extends State<MyGame> {
     }
   }
 
+  bool enable = true;
   void choosePiece() {
-    setState(() {
-      chosenPiece = pieces[number % pieces.length];
-    });
+    if (enable == true) {
+      setState(() {
+        chosenPiece = pieces[number % pieces.length];
+      });
+    }
   }
 
   void moveDown() {
@@ -724,10 +781,36 @@ class _MyGameState extends State<MyGame> {
             x x
 
   */
-  
+    bool _enabled = true;
+
   @override
   Widget build(BuildContext context) {
+    var _onPressed;
+    
+    if(_enabled == true) {
+      _onPressed = () {
+        startGame();
+        _enabled = false;
+      };
+
+      if(_enabled == false) {
+        _onPressed = false;
+      }
+    }
     return Scaffold(
+      appBar: AppBar(
+        title: Container(
+          padding: EdgeInsets.all(60),
+          child: Text('S C O R E  :  $score',
+              style: TextStyle(
+                fontFamily: 'Console',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              )),
+        ),
+        backgroundColor: Colors.black,
+      ),
       backgroundColor: Colors.grey[900],
       body: Center(
         child: Container(
@@ -747,7 +830,7 @@ class _MyGameState extends State<MyGame> {
                   children: <Widget>[
                     Expanded(
                         child: GestureDetector(
-                      onTap: startGame,
+                      onTap: _onPressed,
                       child: MyButton(
                         child: Text(
                           "PLAY",
@@ -800,30 +883,22 @@ class _MyGameState extends State<MyGame> {
 
   void _gameOverScreen(int score) {
     showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Game Over'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                  'Your Score is: $score'),
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('GAME OVER'),
+            content: Text('Your score: $score'),
+            actions: <Widget>[
+              // ignore: deprecated_member_use
+              FlatButton(
+                child: Text('Reset game'),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MyGame()));
+                },
+              )
             ],
-          ),
-actions: [
-            TextButton(
-                onPressed: () => Navigator.of(context).pop(HomePage()),
-                child: Text('Exit')),
-            TextButton(
-                onPressed: () => startGame(),
-                child: Text('Restart')),
-          ],
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        );
-      },
-    );
+          );
+        });
   }
 }
