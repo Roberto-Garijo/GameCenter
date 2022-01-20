@@ -1,39 +1,58 @@
+import 'package:animated_background/animated_background.dart';
 import 'package:flutter/material.dart';
 import 'package:game_center/pages/flappy_home_page.dart';
 import 'package:game_center/pages/snake_home_page.dart';
 import 'package:game_center/pages/tetris_home_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+class HomePage extends StatefulWidget {
 
-// ignore: use_key_in_widget_constructors, must_be_immutable
-class HomePage extends StatelessWidget {
+    _MyAppState createState() => _MyAppState();
+
+}
+
+class _MyAppState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   final _controller = PageController();
-  Image appLogo = const Image(image: NetworkImage("https://s3.amazonaws.com/black-rocket-arcade-assets/wordpress/wp-content/uploads/2019/04/22214756/800-logo.gif"));
-  
+
   @override
   Widget build(BuildContext context) {
+    final particle = ParticleOptions(
+    baseColor: Colors.grey,
+    spawnMinRadius: 1,
+    spawnMaxRadius: 3,
+  );
+
     return Scaffold(
       appBar: AppBar(
-        title: appLogo,
-        backgroundColor: Colors.black,
+        title: Container(
+        padding: EdgeInsets.all(100),
+        child: Text('A R C A D E', style: TextStyle(fontSize: 25),),
+        
+        // title: Image(image: AssetImage('assets/logo.gif')),
+        ),
+          backgroundColor: Colors.black,
       ),
       body: Container(
         color: Colors.black,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            //page view
-            SizedBox(
-              height: 500,
-              child: PageView(
-                controller: _controller,
-                children: const [
-                    FlappyHomePage(),
-                    SnakeHomePage(),
-                    TetrisHomePage()
-                ],
-              ),
-            ),
+          child: AnimatedBackground(
+            behaviour: RandomParticleBehaviour(options: particle),
+            vsync: this,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                //page view
+                SizedBox(
+                  height: 400,
+                  child: PageView(
+                    controller: _controller,
+                    children: const [
+                        FlappyHomePage(),
+                        SnakeHomePage(),
+                        TetrisHomePage()
+                    ],
+                  ),
+                ),
 
             //dots
             SmoothPageIndicator(
@@ -49,6 +68,7 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

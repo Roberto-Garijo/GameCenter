@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:game_center/pages/snake_pages/page_snake_game.dart';
 import 'package:game_center/pages/tetris_pages/game.dart';
 
 class TetrisHomePage extends StatelessWidget {
@@ -16,8 +15,8 @@ class TetrisHomePage extends StatelessWidget {
           child: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(
-                    "https://cdn.dribbble.com/users/2475489/screenshots/9239848/media/ff48675e4dd24c950af1dda5ac3c6019.gif"),
+                image: AssetImage(
+                    "assets/tetris.gif"),
                 fit: BoxFit.cover,
               ),
             ),

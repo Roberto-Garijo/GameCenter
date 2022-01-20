@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:game_center/home_page.dart';
 import 'button.dart';
 import 'grid.dart';
 import 'package:flutter/services.dart';
@@ -54,13 +55,11 @@ class _MyGameState extends State<MyGame> {
   void startGame() {
     resetPieces();
     choosePiece();
-    const duration = const Duration(milliseconds: 300);
+    const duration = Duration(milliseconds: 300);
     Timer.periodic(
       duration,
       (Timer timer) {
         clearRow();
-        print(landedPosColor);
-
         if (hitFloor()) {
           for (int i = 0; i < chosenPiece.length; i++) {
             landed.add(chosenPiece[i]);
@@ -72,6 +71,10 @@ class _MyGameState extends State<MyGame> {
         } else {
           moveDown();
         }
+      //   if (isGameOver()) {
+      //       _gameOverScreen(30);
+      //       timer.cancel();
+      //   } 
       },
     );
   }
@@ -90,17 +93,25 @@ class _MyGameState extends State<MyGame> {
     });
   }
 
+  // bool isGameOver() {
+  //   if(landed.length != numberOfSquares + chosenPiece.length) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
   void clearRow() {
     int count;
     List<int> removeRow = [];
 
-    for (int i = 0; i < 18; i++) {
-      // 18 is the number of rows
+    for (int i = 0; i < 15; i++) {
+      // 15 is the number of rows
       removeRow.clear();
       count = 0;
       for (int j = 0; j < 10; j++) {
         if (landed.contains(numberOfSquares - 1 - i * 10 - j)) {
-          removeRow.add(179 - i * 10 - j);
+          removeRow.add(149 - i * 10 - j);
           count++;
         }
 
@@ -191,7 +202,6 @@ class _MyGameState extends State<MyGame> {
         countLanded();
       }
     }
-
     return hitFloor;
   }
 
@@ -570,7 +580,7 @@ class _MyGameState extends State<MyGame> {
   }
 
   int identifyPiece() {
-    int pieceNumber = 0;
+    int pieceNumber = -1;
 
     chosenPiece.sort();
 
@@ -661,7 +671,7 @@ class _MyGameState extends State<MyGame> {
           x
 
   3 ->    x x
-        x x
+        x x-
 
   4 ->    x
         x x x
@@ -714,7 +724,7 @@ class _MyGameState extends State<MyGame> {
             x x
 
   */
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -737,7 +747,9 @@ class _MyGameState extends State<MyGame> {
                   children: <Widget>[
                     Expanded(
                         child: GestureDetector(
-                      onTap: startGame,
+                      onTap:() {
+                      startGame;
+                      },
                       child: MyButton(
                         child: Text(
                           "PLAY",
@@ -785,6 +797,35 @@ class _MyGameState extends State<MyGame> {
           ),
         ),
       ),
+    );
+  }
+
+  void _gameOverScreen(int score) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Game Over'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                  'Your Score is: $score'),
+            ],
+          ),
+actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(HomePage()),
+                child: Text('Exit')),
+            TextButton(
+                onPressed: () => startGame(),
+                child: Text('Restart')),
+          ],
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        );
+      },
     );
   }
 }
